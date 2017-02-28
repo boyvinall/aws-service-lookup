@@ -1,0 +1,13 @@
+package: github.com/boyvinall/aws-service-lookup
+import:
+- package: github.com/coredns/coredns
+  subpackages:
+  - coremain
+- package: github.com/mitchellh/goamz
+  subpackages:
+  - aws
+  - ec2
+- package: github.com/pkg/errors
+  version: ^0.8.0
+- package: github.com/urfave/cli
+  version: ^1.19.1

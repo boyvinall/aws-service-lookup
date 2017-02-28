@@ -1,0 +1,106 @@
+hash: dc42b687b4c5e055641fe26722447efa4a89ef5e4be72f8986f60b35bb995f36
+updated: 2017-02-28T15:28:15.643198144Z
+imports:
+- name: github.com/beorn7/perks
+  version: 4c0e84591b9aa9e6dcfdf3e020114cd81f89d5f9
+  subpackages:
+  - quantile
+- name: github.com/coredns/coredns
+  version: 0a4903571e85d985f1789aa8f15465337bea9a84
+  subpackages:
+  - coremain
+  - core/dnsserver
+  - middleware/bind
+  - middleware/cache
+  - middleware/errors
+  - middleware/log
+  - middleware/proxy
+  - middleware
+  - request
+  - middleware/metrics/vars
+  - middleware/pkg/edns
+  - middleware/pkg/rcode
+  - middleware/pkg/response
+  - middleware/pkg/dnsrecorder
+  - middleware/pkg/replacer
+  - middleware/pkg/debug
+  - middleware/pkg/dnsutil
+  - middleware/pkg/singleflight
+  - middleware/pkg/tls
+  - middleware/proxy/pb
+  - middleware/etcd/msg
+- name: github.com/flynn/go-shlex
+  version: 3f9db97f856818214da2e1057f8ad84803971cff
+- name: github.com/golang/protobuf
+  version: 4bd1920723d7b7c925de087aa32e2187708897f7
+  subpackages:
+  - proto
+- name: github.com/hashicorp/go-syslog
+  version: b609c7d9de4658cded34a7336b90886c56f9dbdb
+- name: github.com/hashicorp/golang-lru
+  version: 0a025b7e63adc15a622f29b0b2c4c3848243bbf6
+  subpackages:
+  - simplelru
+- name: github.com/matttproud/golang_protobuf_extensions
+  version: c12348ce28de40eed0136aa2b644d0ee0650e56c
+  subpackages:
+  - pbutil
+- name: github.com/mholt/caddy
+  version: 0a0d2cc1cf12d58c5e38680689c78f18044288e6
+  subpackages:
+  - caddyfile
+- name: github.com/miekg/dns
+  version: eda6b320244f0700772bb765282381d17495e7d3
+- name: github.com/mitchellh/goamz
+  version: caaaea8b30ee15616494ee68abd5d8ebbbef05cf
+  subpackages:
+  - aws
+  - ec2
+- name: github.com/opentracing/opentracing-go
+  version: 6edb48674bd9467b8e91fda004f2bd7202d60ce4
+  subpackages:
+  - log
+- name: github.com/pkg/errors
+  version: 645ef00459ed84a119197bfb8d8205042c6df63d
+- name: github.com/prometheus/client_golang
+  version: c5b7fccd204277076155f10851dad72b76a49317
+  subpackages:
+  - prometheus
+- name: github.com/prometheus/client_model
+  version: fa8ad6fec33561be4280a8f0514318c79d7f6cb6
+  subpackages:
+  - go
+- name: github.com/prometheus/common
+  version: f36a8da2241e626287bf1adfa7bc2f66bbc6770b
+  subpackages:
+  - expfmt
+  - model
+  - internal/bitbucket.org/ww/goautoneg
+- name: github.com/prometheus/procfs
+  version: abf152e5f3e97f2fafac028d2cc06c1feb87ffa5
+- name: github.com/urfave/cli
+  version: 0bdeddeeb0f650497d603c4ad7b20cfe685682f6
+- name: github.com/vaughan0/go-ini
+  version: a98ad7ee00ec53921f08832bc06ecf7fd600e6a1
+- name: golang.org/x/net
+  version: f2499483f923065a842d38eb4c7f1927e6fc6e6d
+  subpackages:
+  - context
+  - http2
+  - trace
+  - http2/hpack
+  - idna
+  - lex/httplex
+  - internal/timeseries
+- name: google.golang.org/grpc
+  version: 777daa17ff9b5daef1cfdf915088a2ada3332bf0
+  subpackages:
+  - credentials
+  - codes
+  - grpclog
+  - internal
+  - metadata
+  - naming
+  - transport
+  - peer
+testImports: []
