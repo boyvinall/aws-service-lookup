@@ -4,7 +4,6 @@ import (
 	"log"
 	"net"
 	"regexp"
-
 	"strings"
 
 	"github.com/mitchellh/goamz/aws"
@@ -22,14 +21,24 @@ type Host struct {
 type Hosts []Host
 
 func Query(accesskey, secretkey string, vpc map[string]struct{}, running bool) (Hosts, error) {
+	token := ""
 	if accesskey == "" {
-		// TODO: try to get key from EC2 metadata service
-		return nil, errors.New("accesskey is empty")
+		creds, err := GetKeysFromRole()
+		if err != nil {
+			return nil, errors.New("accesskey is empty")
+		}
+		accesskey = creds.AccessKeyId
+		secretkey = creds.SecretAccessKey
+		token = creds.Token
 	} else if secretkey == "" {
 		return nil, errors.New("secretkey is empty")
 	}
 
-	auth := aws.Auth{AccessKey: accesskey, SecretKey: secretkey}
+	auth := aws.Auth{
+		AccessKey: accesskey,
+		SecretKey: secretkey,
+		Token:     token,
+	}
 	e := ec2.New(auth, aws.EUWest)
 	resp, err := e.Instances(nil, nil)
 	if err != nil {
@@ -38,18 +47,11 @@ func Query(accesskey, secretkey string, vpc map[string]struct{}, running bool) (
 
 	hosts := make([]Host, 0)
 
-	// log.Printf("%d Reservations", len(resp.Reservations))
 	for _, res := range resp.Reservations {
-		// log.Printf("%d Instances", len(res.Instances))
 		for _, inst := range res.Instances {
 			if _, ok := vpc[inst.VpcId]; len(vpc) > 0 && !ok {
 				continue
 			}
-
-			// b, err := json.MarshalIndent(inst, "", "  ")
-			// if err == nil {
-			// 	log.Printf("%+v", string(b))
-			// }
 
 			h := Host{
 				PrivateIPAddress: inst.PrivateIpAddress,
@@ -91,8 +93,10 @@ func (hosts Hosts) Records() map[string][]net.IP {
 		}
 
 		for _, service := range strings.Split(services, " ") {
-			service = service + ".service.local."
-			r[service] = append(r[service], ip)
+			if len(service) > 0 {
+				service = service + ".service.local."
+				r[service] = append(r[service], ip)
+			}
 		}
 	}
 
