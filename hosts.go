@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/urfave/cli"
 	"github.com/boyvinall/aws-service-lookup/ec2tags"
+	"github.com/urfave/cli"
 )
 
 var CmdHosts = cli.Command{
@@ -21,7 +21,17 @@ func hosts(c *cli.Context) error {
 	vpc := c.GlobalStringSlice("vpc")
 	v := make(map[string]struct{}, 0)
 	for _, k := range vpc {
-		v[k] = struct{}{}
+		if k == "local" {
+			vpcs, err := ec2tags.GetLocalVPCs()
+			if err != nil {
+				continue
+			}
+			for _, j := range vpcs {
+				v[j] = struct{}{}
+			}
+		} else {
+			v[k] = struct{}{}
+		}
 	}
 
 	hosts, err := ec2tags.Query(accesskey, secretkey, v, c.GlobalBool("running"))

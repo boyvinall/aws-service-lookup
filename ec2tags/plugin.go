@@ -51,7 +51,17 @@ func CreatePlugin(c *caddy.Controller) error {
 	}
 
 	for _, k := range VPC {
-		p.VPC[k] = struct{}{}
+		if k == "local" {
+			vpcs, err := GetLocalVPCs()
+			if err != nil {
+				continue
+			}
+			for _, v := range vpcs {
+				p.VPC[v] = struct{}{}
+			}
+		} else {
+			p.VPC[k] = struct{}{}
+		}
 	}
 
 	for c.Next() {
