@@ -9,6 +9,8 @@ ExecStart=/usr/bin/aws-service-lookup --vpc local --running serve --conf /etc/aw
 ExecReload=/bin/kill -s HUP $MAINPID
 TimeoutStartSec=5
 KillMode=process
+Restart=on-failure
+RestartSec=30
 
 [Install]
 WantedBy=multi-user.target
