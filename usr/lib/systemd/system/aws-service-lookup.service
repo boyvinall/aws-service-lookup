@@ -1,0 +1,14 @@
+[Unit]
+Description=aws-service-lookup
+Documentation=https://github.com/boyvinall/aws-service-lookup
+After=network.target
+
+[Service]
+Type=notify
+ExecStart=/usr/bin/aws-service-lookup --vpc local --running serve --conf /etc/aws-service-lookup/Corefile
+ExecReload=/bin/kill -s HUP $MAINPID
+TimeoutStartSec=5
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target

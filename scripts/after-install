@@ -1,0 +1,6 @@
+if [ -f /sbin/initctl ]; then
+	initctl start aws-service-lookup
+elif [ -f /usr/bin/systemctl ]; then
+	systemctl enable aws-service-lookup
+	systemctl start aws-service-lookup
+fi

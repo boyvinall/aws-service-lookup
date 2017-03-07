@@ -34,16 +34,25 @@ RPM=$(RPM_NAME)-$(RPM_VERSION)-1.x86_64.rpm
 rpm: $(RPM)
 
 $(RPM): usr/bin/aws-service-lookup
-	fpm -s dir -t rpm \
+	$(call PROMPT,$@)
+	fpm -s dir -t rpm -f \
 		-n $(RPM_NAME) \
 		-v $(RPM_VERSION) \
 		--description "$(RPM_DESC)" \
 		--url "$(RPM_URL)" \
+		--after-install scripts/after-install \
+		--before-remove scripts/before-remove \
+		--before-upgrade scripts/before-remove \
+		--after-upgrade scripts/after-install \
 		etc usr
 
 usr/bin/aws-service-lookup: aws-service-lookup
 	mkdir -p $(dir $@)
 	cp $< $@
 
+.PHONY: rpm-install
+rpm-install: $(RPM)
+	rpm -Uvh --replacepkgs $<
+
 clean::
-	rm -rf $(RPM) usr aws-service-lookup
+	rm -rf $(RPM) usr/bin aws-service-lookup

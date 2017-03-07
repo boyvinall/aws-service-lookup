@@ -1,0 +1,6 @@
+if [ -f /sbin/initctl ]; then
+	initctl stop aws-service-lookup
+elif [ -f /usr/bin/systemctl ]; then
+	systemctl stop aws-service-lookup
+	systemctl disable aws-service-lookup
+fi
