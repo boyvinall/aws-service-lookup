@@ -19,7 +19,7 @@ type RoleCredentials struct {
 	Code            string
 	LastUpdated     time.Time
 	Type            string
-	AccessKeyId     string
+	AccessKeyID     string `json:"AccessKeyId"`
 	SecretAccessKey string
 	Token           string
 	Expiration      time.Time
@@ -61,7 +61,7 @@ func GetDocument(rawurl string) ([]byte, error) {
 
 func GetKeysFromRole() (*RoleCredentials, error) {
 	credsList, err := GetList(securityCredentials)
-	if len(credsList) == 0 {
+	if err != nil || len(credsList) == 0 {
 		return nil, errors.New("No IAM roles found")
 	}
 

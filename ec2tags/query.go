@@ -27,7 +27,7 @@ func Query(accesskey, secretkey string, vpc map[string]struct{}, running bool) (
 		if err != nil {
 			return nil, errors.New("accesskey is empty")
 		}
-		accesskey = creds.AccessKeyId
+		accesskey = creds.AccessKeyID
 		secretkey = creds.SecretAccessKey
 		token = creds.Token
 	} else if secretkey == "" {
