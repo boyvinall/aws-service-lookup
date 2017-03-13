@@ -1,0 +1,18 @@
+. {
+    proxy . /etc/resolv.conf
+    cache 20
+}
+
+compute.internal. {
+    ec2tags {
+        domain compute.internal.
+    }
+    cache 300
+}
+
+service.local. {
+    ec2tags {
+        domain service.local.
+    }
+    cache 300
+}

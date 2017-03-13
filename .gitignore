@@ -6,5 +6,6 @@ coverage.html
 coverage.json
 goconvey.out
 aws-service-lookup
+!etc/aws-service-lookup
 query.log
 *.rpm
