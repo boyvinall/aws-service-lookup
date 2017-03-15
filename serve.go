@@ -3,7 +3,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -11,13 +10,13 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/boyvinall/aws-service-lookup/ec2tags"
 	"github.com/coredns/coredns/core/dnsserver"
 	"github.com/mholt/caddy"
 	"github.com/urfave/cli"
-	"github.com/boyvinall/aws-service-lookup/ec2tags"
 
 	// plug in the standard directives (sorted)
-	// _ "github.com/coredns/coredns/middleware/auto"
+	_ "github.com/coredns/coredns/middleware/auto"
 	_ "github.com/coredns/coredns/middleware/bind"
 	_ "github.com/coredns/coredns/middleware/cache"
 	// _ "github.com/coredns/coredns/middleware/chaos"
@@ -25,15 +24,15 @@ import (
 	// _ "github.com/coredns/coredns/middleware/erratic"
 	_ "github.com/coredns/coredns/middleware/errors"
 	// _ "github.com/coredns/coredns/middleware/etcd"
-	// _ "github.com/coredns/coredns/middleware/file"
-	// _ "github.com/coredns/coredns/middleware/health"
+	_ "github.com/coredns/coredns/middleware/file"
+	_ "github.com/coredns/coredns/middleware/health"
 	// _ "github.com/coredns/coredns/middleware/kubernetes"
-	// _ "github.com/coredns/coredns/middleware/loadbalance"
+	_ "github.com/coredns/coredns/middleware/loadbalance"
 	_ "github.com/coredns/coredns/middleware/log"
 	// _ "github.com/coredns/coredns/middleware/metrics"
 	// _ "github.com/coredns/coredns/middleware/pprof"
 	_ "github.com/coredns/coredns/middleware/proxy"
-	// _ "github.com/coredns/coredns/middleware/reverse"
+	_ "github.com/coredns/coredns/middleware/reverse"
 	// _ "github.com/coredns/coredns/middleware/rewrite"
 	// _ "github.com/coredns/coredns/middleware/root"
 	// _ "github.com/coredns/coredns/middleware/secondary"
@@ -57,11 +56,6 @@ var CmdServe = cli.Command{
 			Value:       `100%`,
 			Usage:       "CPU cap",
 			Destination: &cpu,
-		},
-		cli.BoolFlag{
-			Name:        "plugins",
-			Usage:       "List installed plugins",
-			Destination: &plugins,
 		},
 		cli.StringFlag{
 			Name:        "log",
@@ -173,8 +167,6 @@ var (
 	conf    string
 	cpu     string
 	logfile string
-	version bool
-	plugins bool
 )
 
 const (
@@ -184,6 +176,21 @@ const (
 )
 
 func serve(c *cli.Context) error {
+	// Set up process log before anything bad happens
+	switch logfile {
+	case "stdout":
+		log.SetOutput(os.Stdout)
+	case "stderr":
+		log.SetOutput(os.Stderr)
+	default:
+		log.SetOutput(os.Stdout)
+	}
+	log.SetFlags(log.LstdFlags)
+
+	// This is a bad thing to do, but is the only thing possible
+	// until/unless the plugin is upstreamed.
+	dnsserver.RegisterDevDirective(ec2tags.ConfigDirective, "")
+
 	ec2tags.AccessKey = c.GlobalString("aws-access-key")
 	ec2tags.SecretKey = c.GlobalString("aws-secret-key")
 	ec2tags.VPC = c.GlobalStringSlice("vpc")
@@ -197,22 +204,6 @@ func serve(c *cli.Context) error {
 
 	caddy.AppName = coreName
 	caddy.AppVersion = coreVersion
-
-	// Set up process log before anything bad happens
-	switch logfile {
-	case "stdout":
-		log.SetOutput(os.Stdout)
-	case "stderr":
-		log.SetOutput(os.Stderr)
-	default:
-		log.SetOutput(os.Stdout)
-	}
-	log.SetFlags(log.LstdFlags)
-
-	if plugins {
-		fmt.Println(caddy.DescribePlugins())
-		os.Exit(0)
-	}
 
 	// Set CPU cap
 	if err := setCPU(cpu); err != nil {

@@ -7,6 +7,7 @@ all: build coverage lint-full
 export GOPATH:=$(realpath $(shell pwd)/../../../..)
 
 GOMAKE:=gopkg.in/make.v3
+GOMETALINTER_DEADLINE:=60s
 -include $(GOPATH)/src/$(GOMAKE)/batteries.mk
 $(GOPATH)/src/gopkg.in/$(GOMAKE)/batteries.mk:
 	go get gopkg.in/$(GOMAKE)

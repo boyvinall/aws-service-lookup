@@ -8,7 +8,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-const Name string = "aws-info"
+const Name string = "aws-service-lookup"
 const Version string = "0.1.0"
 
 var (
@@ -24,6 +24,7 @@ func main() {
 	app.Author = ""
 	app.Email = ""
 	app.Usage = ""
+	app.EnableBashCompletion = true
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:   "aws-access-key",
@@ -58,6 +59,8 @@ func main() {
 	app.Commands = []cli.Command{
 		CmdHosts,
 		CmdServe,
+		CmdListPlugins,
+		CmdBashCompletion,
 	}
 
 	app.Run(os.Args)

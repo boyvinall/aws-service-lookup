@@ -93,10 +93,19 @@ func (hosts Hosts) Records() map[string][]net.IP {
 		}
 
 		for _, service := range strings.Split(services, " ") {
-			if len(service) > 0 {
-				service = service + ".service.local."
-				r[service] = append(r[service], ip)
+			if len(service) == 0 {
+				continue
 			}
+
+			// services beginning with "@" are alias names so they provide a FQDN for the service
+			switch service[0] {
+			case '@':
+				service = service[1:]
+			default:
+				service = service + ".service.local."
+			}
+
+			r[service] = append(r[service], ip)
 		}
 	}
 

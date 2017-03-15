@@ -24,10 +24,6 @@ func init() {
 			return CreatePlugin(c)
 		},
 	})
-
-	// This is a bad thing to do, but is the only thing possible
-	// until/unless the plugin is upstreamed.
-	dnsserver.RegisterDevDirective(ConfigDirective, "")
 }
 
 var (
